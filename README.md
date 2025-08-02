@@ -1,50 +1,49 @@
-# gRPC Process Migration System
+# gRPC Process Migration Control
 
-A distributed process migration system built with gRPC that enables zero-downtime migration of running processes between server nodes. Features a React frontend dashboard for monitoring and controlling migrations, an Express.js backend with REST APIs, and Python gRPC services for inter-server communication.
+A clean, focused interface for controlling process migrations in distributed systems. Built with React and TypeScript, this application provides a simple form for triggering zero-downtime process migrations between servers using gRPC communication.
 
-![System Architecture](https://img.shields.io/badge/Architecture-Distributed-blue)
-![gRPC](https://img.shields.io/badge/gRPC-Python-green)
 ![Frontend](https://img.shields.io/badge/Frontend-React%20%2B%20TypeScript-blue)
 ![Backend](https://img.shields.io/badge/Backend-Express.js-green)
+![gRPC](https://img.shields.io/badge/gRPC-Python-green)
 
 ## 🚀 Features
 
-- **Zero-Downtime Migration**: Seamlessly migrate running processes between servers without interruption
-- **Real-time Dashboard**: Modern React interface for monitoring system topology and process status
-- **gRPC Communication**: High-performance inter-server communication using Protocol Buffers
-- **Process Management**: Start, pause, resume, and migrate processes across distributed nodes
-- **System Monitoring**: Real-time logs and metrics for all migration operations
-- **Server Topology Visualization**: Interactive view of server nodes and process distribution
+- **Migration Control Form**: Clean interface for selecting processes and target servers
+- **Real-time Updates**: Live migration status and recent migration history
+- **Process Selection**: Dropdown to choose from available running processes
+- **Server Selection**: Source and target server selection with validation
+- **Migration History**: Display of recent migration attempts with status
 
-## 🏗️ System Architecture
+## 🏗️ Architecture
 
-```
-Frontend (React + TypeScript)
-   |
-   ↓
-Backend (Express.js + REST APIs)
-   |
-   |--- gRPC --> Source Node (Server A)
-   |             |
-   |             |--- gRPC --> Target Node (Server B)
-   |
-   ↓
-Migration Coordinator (Python)
-```
+### Frontend (React + TypeScript)
+- **Framework**: React with Vite for fast development
+- **UI Components**: Shadcn/ui with Tailwind CSS for clean design
+- **State Management**: TanStack Query for server state management
+- **Form Handling**: React Hook Form with Zod validation
 
-### Components
+### Backend (Express.js + TypeScript)
+- **API Server**: RESTful APIs for migration operations
+- **Data Storage**: In-memory storage for processes and servers
+- **Migration Logic**: Integration with gRPC services
 
-- **Frontend Dashboard**: React application with real-time monitoring and control interfaces
-- **Backend API**: Express.js server providing REST endpoints for dashboard operations
-- **gRPC Services**: Python services for process management and inter-server communication
-- **Migration Coordinator**: Orchestrates migration workflows between server nodes
-- **Data Storage**: In-memory storage with interface-based abstraction
+### gRPC Services (Python)
+- **Process Migration**: Handles actual process transfer between servers
+- **Server Communication**: Direct gRPC calls for process state transfer
+- **Protocol Buffers**: Structured messages for migration requests
+
+## 📦 Technology Stack
+
+- **Frontend**: React, TypeScript, Vite, Tailwind CSS, Shadcn/ui
+- **Backend**: Express.js, TypeScript
+- **gRPC**: Python, Protocol Buffers
+- **Development**: ESLint, tsx, esbuild
 
 ## 📋 Prerequisites
 
-- **Node.js** 20+ (for frontend and backend)
-- **Python** 3.8+ (for gRPC services)
-- **npm** or **yarn** (package management)
+- **Node.js** 20+
+- **Python** 3.8+
+- **npm** package manager
 - **Protocol Buffers compiler** (protoc)
 
 ## 🛠️ Installation
@@ -63,7 +62,7 @@ cd grpc-process-migration
 npm install
 
 # Install Python dependencies
-pip install -r requirements.txt
+pip install -r python-requirements.txt
 ```
 
 ### 3. Generate Protocol Buffer Files
@@ -95,37 +94,62 @@ python start_grpc_services.py
 
 This starts 5 gRPC server instances on ports 50051-50055.
 
-### 3. Access the Dashboard
+### 3. Access the Migration Control
 
 Open your browser and navigate to `http://localhost:5000`
 
 ## 📖 Usage
 
-### Dashboard Overview
+### Migration Control Form
 
-The dashboard provides four main sections:
+The application displays a clean migration control interface:
 
-1. **System Overview**: Key metrics including total processes, active migrations, server nodes, and success rates
-2. **Server Topology**: Visual representation of all server nodes with CPU, memory, and process counts
-3. **Process Management**: List of active processes with controls to pause, resume, and migrate
-4. **Migration Control**: Interface to manually trigger migrations between servers
-5. **System Logs**: Real-time logs from gRPC services and migration operations
+1. **Process Selection**: Choose from available running processes
+2. **Source Server**: Select the current server hosting the process
+3. **Target Server**: Choose the destination server for migration
+4. **Migration Info**: View details about the migration process
+5. **Action Buttons**: Initiate migration or clear the form
+6. **Recent Migrations**: See history of recent migration attempts
 
-### Process Migration
+### Example Migration Flow
 
-1. **Select Process**: Choose a running process from the dropdown
-2. **Choose Servers**: Select source and target servers
-3. **Initiate Migration**: Click "Initiate Migration" to start the process
-4. **Monitor Progress**: Watch real-time status updates in the logs
+```bash
+# The system will:
+1. Pause the process on the source server
+2. Serialize the process state
+3. Transfer state to the target server
+4. Resume the process on the target server
+5. Update the migration history
+```
+
+## 🔧 Development
+
+### Project Structure
+
+```
+├── client/                 # React frontend
+│   ├── src/
+│   │   ├── components/     # UI components
+│   │   │   └── MigrationControl.tsx  # Main migration form
+│   │   ├── pages/          # Page components
+│   │   │   └── dashboard.tsx  # Main page
+│   │   └── lib/            # Utility libraries
+├── server/                 # Express.js backend
+│   ├── grpc/              # gRPC services and protobuf files
+│   ├── index.ts           # Main server entry point
+│   ├── routes.ts          # API route definitions
+│   └── storage.ts         # Data storage layer
+├── shared/                # Shared type definitions
+│   └── schema.ts          # Database schema and types
+└── start_grpc_services.py # gRPC server launcher
+```
 
 ### API Endpoints
 
-- `GET /api/overview` - System overview statistics
+- `GET /api/processes` - List all processes available for migration
 - `GET /api/servers` - List all server nodes
-- `GET /api/processes` - List all processes
-- `POST /api/processes` - Create a new process
 - `POST /api/migrations` - Initiate a process migration
-- `GET /api/logs` - Retrieve system logs
+- `GET /api/migrations` - Retrieve migration history
 
 ### gRPC Services
 
@@ -137,81 +161,37 @@ The system includes the following gRPC service methods:
 - `GetStatus` - Get current process status
 - `HealthCheck` - Check server health and process count
 
-## 🏛️ Architecture Details
-
-### Frontend Architecture
-- **Framework**: React with TypeScript using Vite as the build tool
-- **UI Components**: Shadcn/ui component library with Radix UI primitives
-- **Styling**: Tailwind CSS with custom design tokens and dark mode support
-- **State Management**: TanStack Query for server state management and caching
-- **Routing**: Wouter for lightweight client-side routing
-
-### Backend Architecture
-- **Server**: Express.js with TypeScript running on Node.js
-- **API Design**: RESTful APIs for dashboard operations with comprehensive error handling
-- **Data Storage**: In-memory storage with interface-based abstraction for future database integration
-- **Real-time Updates**: Polling-based updates every 5 seconds for dashboard components
-
-### gRPC Service Layer
-- **Process Management**: Python gRPC services handling process lifecycle (start, pause, resume, migrate)
-- **Inter-server Communication**: Direct gRPC calls between server nodes for state transfer
-- **Coordinator Service**: Central orchestration of migration workflows
-- **Protocol Buffers**: Structured message definitions for process state and migration requests
-
-## 🔧 Development
-
-### Running in Development Mode
-
-```bash
-# Start the main application with hot reload
-npm run dev
-
-# Start gRPC services
-python start_grpc_services.py
-
-# Generate new protobuf files (if needed)
-cd server/grpc
-python -m grpc_tools.protoc --proto_path=. --python_out=. --grpc_python_out=. process.proto
-```
-
-### Project Structure
-
-```
-├── client/                 # React frontend
-│   ├── src/
-│   │   ├── components/     # UI components
-│   │   ├── pages/          # Page components
-│   │   ├── lib/            # Utility libraries
-│   │   └── hooks/          # Custom React hooks
-├── server/                 # Express.js backend
-│   ├── grpc/              # gRPC services and protobuf files
-│   ├── index.ts           # Main server entry point
-│   ├── routes.ts          # API route definitions
-│   └── storage.ts         # Data storage layer
-├── shared/                # Shared type definitions
-│   └── schema.ts          # Database schema and types
-└── start_grpc_services.py # gRPC server launcher
-```
-
 ## 🧪 Testing
 
 ### Testing Process Migration
 
 1. Start all services using the quick start guide
-2. Create a new process using the "New Process" button
-3. Select the process in the Migration Control panel
-4. Choose different source and target servers
-5. Click "Initiate Migration" and monitor the logs
+2. Select a process from the dropdown
+3. Choose different source and target servers
+4. Click "Initiate Migration" and monitor the status
+5. Check the recent migrations list for results
 
-### Example Migration Flow
+## 🚀 Deployment
+
+### Production Build
 
 ```bash
-# The system will:
-1. Pause the process on the source server
-2. Serialize the process state
-3. Transfer state to the target server
-4. Resume the process on the target server
-5. Update the dashboard with new process location
+npm run build
+```
+
+### Docker Deployment
+
+```bash
+# Build and run with Docker Compose
+docker-compose up --build
+```
+
+### Environment Variables
+
+```bash
+NODE_ENV=production
+PORT=5000
+GRPC_SERVER_PORTS=50051,50052,50053,50054,50055
 ```
 
 ## 🔒 Security Considerations
@@ -221,29 +201,6 @@ python -m grpc_tools.protoc --proto_path=. --python_out=. --grpc_python_out=. pr
 - Implement authentication and authorization as needed
 - Validate all input data and handle errors gracefully
 
-## 🚀 Deployment
-
-### Production Deployment
-
-1. Build the frontend:
-```bash
-npm run build
-```
-
-2. Set up production environment variables
-3. Configure TLS for gRPC services
-4. Use a process manager like PM2 for Node.js services
-5. Set up monitoring and logging infrastructure
-
-### Docker Deployment
-
-Docker configuration files are included for containerized deployment:
-
-```bash
-# Build and run with Docker Compose
-docker-compose up --build
-```
-
 ## 🤝 Contributing
 
 1. Fork the repository
@@ -252,16 +209,11 @@ docker-compose up --build
 4. Push to the branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
 
+See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed guidelines.
+
 ## 📄 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 🙏 Acknowledgments
-
-- Built with React, Express.js, and Python gRPC
-- UI components from Shadcn/ui and Radix UI
-- Inspired by distributed systems architecture patterns
-- Protocol Buffers for efficient serialization
 
 ## 📞 Support
 

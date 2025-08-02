@@ -1,6 +1,6 @@
 # Overview
 
-This is a distributed process migration system built with gRPC that enables zero-downtime migration of running processes between server nodes. The system features a React frontend dashboard for monitoring and controlling migrations, an Express.js backend with REST APIs, and Python gRPC services for inter-server communication. The architecture supports real-time process state management, server topology visualization, and comprehensive system logging.
+This is a simplified gRPC process migration control interface that provides a clean, focused form for triggering zero-downtime process migrations between servers. The project has been streamlined from a comprehensive dashboard to focus specifically on migration control functionality. It features a React frontend with a single migration form, an Express.js backend with REST APIs, and Python gRPC services for inter-server communication.
 
 # User Preferences
 
@@ -11,10 +11,10 @@ Preferred communication style: Simple, everyday language.
 ## Frontend Architecture
 - **Framework**: React with TypeScript using Vite as the build tool
 - **UI Components**: Shadcn/ui component library with Radix UI primitives
-- **Styling**: Tailwind CSS with custom design tokens and dark mode support
+- **Styling**: Tailwind CSS with custom design tokens and responsive design
 - **State Management**: TanStack Query for server state management and caching
-- **Routing**: Wouter for lightweight client-side routing
-- **Dashboard Features**: Real-time monitoring of server topology, process management, migration controls, and system logs
+- **Form Management**: React Hook Form with Zod validation for migration control
+- **Main Features**: Single migration control form with process selection, server selection, and recent migration history
 
 ## Backend Architecture
 - **Server**: Express.js with TypeScript running on Node.js
