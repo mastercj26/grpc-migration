@@ -1,0 +1,41 @@
+version: '3.8'
+
+services:
+  # Main application (React frontend + Express.js backend)
+  app:
+    build: .
+    ports:
+      - "5000:5000"
+      - "50051:50051"
+      - "50052:50052"
+      - "50053:50053"
+      - "50054:50054"
+      - "50055:50055"
+    environment:
+      - NODE_ENV=production
+      - PYTHONPATH=/app
+    volumes:
+      - ./logs:/app/logs
+    networks:
+      - migration-network
+
+  # Optional: Database for persistent storage
+  # postgres:
+  #   image: postgres:15
+  #   environment:
+  #     POSTGRES_DB: process_migration
+  #     POSTGRES_USER: migration_user
+  #     POSTGRES_PASSWORD: migration_pass
+  #   ports:
+  #     - "5432:5432"
+  #   volumes:
+  #     - postgres_data:/var/lib/postgresql/data
+  #   networks:
+  #     - migration-network
+
+networks:
+  migration-network:
+    driver: bridge
+
+# volumes:
+#   postgres_data:
