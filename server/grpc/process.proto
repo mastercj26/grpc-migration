@@ -1,0 +1,50 @@
+syntax = "proto3";
+
+service ProcessManager {
+  rpc StartProcess (ProcessRequest) returns (ProcessResponse);
+  rpc PauseProcess (ProcessID) returns (ProcessState);
+  rpc ResumeProcess (ResumeRequest) returns (ProcessResponse);
+  rpc GetStatus(ProcessID) returns (StatusResponse);
+  rpc HealthCheck(Empty) returns (HealthResponse);
+}
+
+message ProcessRequest {
+  string id = 1;
+  string type = 2; // e.g., compute, session
+}
+
+message ProcessID {
+  string id = 1;
+}
+
+message ProcessState {
+  string id = 1;
+  bytes data = 2; // serialized pickle/blobs, etc.
+  string status = 3;
+}
+
+message ResumeRequest {
+  string id = 1;
+  bytes data = 2;
+}
+
+message ProcessResponse {
+  string id = 1;
+  string status = 2;
+  string message = 3;
+}
+
+message StatusResponse {
+  string id = 1;
+  string status = 2;
+  string host = 3;
+  int32 port = 4;
+}
+
+message Empty {}
+
+message HealthResponse {
+  string status = 1;
+  string server_name = 2;
+  int32 process_count = 3;
+}
