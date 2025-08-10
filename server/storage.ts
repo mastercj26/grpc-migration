@@ -2,18 +2,18 @@ import { type User, type InsertUser, type Server, type InsertServer, type Proces
 import { randomUUID } from "crypto";
 
 export interface IStorage {
-  // User methods
+  
   getUser(id: string): Promise<User | undefined>;
   getUserByUsername(username: string): Promise<User | undefined>;
   createUser(user: InsertUser): Promise<User>;
 
-  // Server methods
+  
   getAllServers(): Promise<Server[]>;
   getServer(id: string): Promise<Server | undefined>;
   createServer(server: InsertServer): Promise<Server>;
   updateServer(id: string, updates: Partial<Server>): Promise<Server | undefined>;
 
-  // Process methods
+
   getAllProcesses(): Promise<ProcessWithServer[]>;
   getProcess(id: string): Promise<Process | undefined>;
   getProcessesByServer(serverId: string): Promise<Process[]>;
@@ -21,13 +21,13 @@ export interface IStorage {
   updateProcess(id: string, updates: Partial<Process>): Promise<Process | undefined>;
   deleteProcess(id: string): Promise<boolean>;
 
-  // Migration methods
+ 
   getAllMigrations(): Promise<MigrationWithDetails[]>;
   getMigration(id: string): Promise<Migration | undefined>;
   createMigration(migration: InsertMigration): Promise<Migration>;
   updateMigration(id: string, updates: Partial<Migration>): Promise<Migration | undefined>;
 
-  // System logs
+
   getSystemLogs(limit?: number): Promise<SystemLog[]>;
   addSystemLog(log: InsertSystemLog): Promise<SystemLog>;
   clearSystemLogs(): Promise<void>;
@@ -47,7 +47,7 @@ export class MemStorage implements IStorage {
     this.migrations = new Map();
     this.systemLogs = [];
 
-    // Initialize with default servers
+    ]
     this.initializeDefaultData();
   }
 
@@ -117,7 +117,7 @@ export class MemStorage implements IStorage {
 
     defaultServers.forEach(server => this.servers.set(server.id, server));
 
-    // Initialize with default processes
+  
     const defaultProcesses: Process[] = [
       {
         id: "task-123",
@@ -151,7 +151,7 @@ export class MemStorage implements IStorage {
     defaultProcesses.forEach(process => this.processes.set(process.id, process));
   }
 
-  // User methods
+
   async getUser(id: string): Promise<User | undefined> {
     return this.users.get(id);
   }
@@ -169,7 +169,7 @@ export class MemStorage implements IStorage {
     return user;
   }
 
-  // Server methods
+  
   async getAllServers(): Promise<Server[]> {
     return Array.from(this.servers.values());
   }
@@ -201,7 +201,7 @@ export class MemStorage implements IStorage {
     return updated;
   }
 
-  // Process methods
+  
   async getAllProcesses(): Promise<ProcessWithServer[]> {
     const processes = Array.from(this.processes.values());
     return processes.map(process => ({
@@ -229,7 +229,7 @@ export class MemStorage implements IStorage {
     };
     this.processes.set(process.id, process);
     
-    // Update server process count
+
     if (process.server_id) {
       const server = this.servers.get(process.server_id);
       if (server) {
@@ -254,7 +254,6 @@ export class MemStorage implements IStorage {
     const process = this.processes.get(id);
     if (!process) return false;
 
-    // Update server process count
     if (process.server_id) {
       const server = this.servers.get(process.server_id);
       if (server && server.process_count > 0) {
@@ -266,7 +265,7 @@ export class MemStorage implements IStorage {
     return this.processes.delete(id);
   }
 
-  // Migration methods
+
   async getAllMigrations(): Promise<MigrationWithDetails[]> {
     const migrations = Array.from(this.migrations.values());
     return migrations.map(migration => ({
@@ -304,7 +303,7 @@ export class MemStorage implements IStorage {
     return updated;
   }
 
-  // System logs
+
   async getSystemLogs(limit: number = 100): Promise<SystemLog[]> {
     return this.systemLogs
       .sort((a, b) => new Date(b.timestamp!).getTime() - new Date(a.timestamp!).getTime())
@@ -320,7 +319,7 @@ export class MemStorage implements IStorage {
     };
     this.systemLogs.push(log);
     
-    // Keep only last 1000 logs to prevent memory issues
+   
     if (this.systemLogs.length > 1000) {
       this.systemLogs = this.systemLogs.slice(-1000);
     }
