@@ -55,4 +55,5 @@ NODE_ENV=production
 PORT=5000
 GRPC_SERVER_PORTS=50051,50052,50053,50054,50055
 ```
+<img width="1838" height="788" alt="image" src="https://github.com/user-attachments/assets/6e86e905-5aab-413f-8f5b-b9bc9b1da935" />
 
